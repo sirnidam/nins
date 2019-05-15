@@ -1,0 +1,241 @@
+/**
+ * This program tests the Hotel and Receptionist classes.
+ * 
+*/
+public class HotelTester
+{
+   /**
+    *  Main method for the tester.
+    *  Creates a hotel object
+    *  with initially three room objects and
+    *  three receptionist objects.
+    *  Receptionist later adds two new room objects.
+    */
+   public static void main( String args[] )
+   {
+       Hotel hotel = new Hotel();
+       hotel.addRoom( 101, 2000.00);
+       hotel.addRoom( 102, 2500.00 );
+       hotel.addRoom( 103, 3000.00 );
+       Receptionist r1 = new Receptionist( hotel );
+       Receptionist r2 = new Receptionist( hotel );
+       Receptionist r3 = new Receptionist( hotel );
+       
+       System.out.printf( "Total Sales   : %8.2f\n", hotel.getTotalCash() );
+       System.out.printf( "Receptionist 1: %8.2f\n", r1.getCash() );
+       System.out.printf( "Receptionist 2: %8.2f\n", r2.getCash() );
+       System.out.printf( "Receptionist 3: %8.2f\n", r3.getCash() );
+       hotel.printSummary(); // all rooms empty
+       
+       r1.checkIn( 101, "Bob", 1 );
+       r2.checkIn( 102, "Joe", 2 );
+       r1.checkOut( 101, 3, 100.00 );
+       r1.changeRoomRate( 101, 10000.00 );
+       r1.checkIn( 101, "Ann", 3 );
+       r3.checkOut( 102, 3, 200.00 );
+       r2.checkIn( 103, "Liz", 3 );
+       r2.changeRoomRate( 103, 4000.00 ); // error
+       
+       System.out.println( "---" );
+       System.out.printf( "Total Sales   : %8.2f\n", hotel.getTotalCash() );
+       System.out.printf( "Receptionist 1: %8.2f\n", r1.getCash() );
+       System.out.printf( "Receptionist 2: %8.2f\n", r2.getCash() );
+       System.out.printf( "Receptionist 3: %8.2f\n", r3.getCash() );
+       hotel.printSummary();
+       System.out.println( "---" );
+       
+       r1.checkIn( 201, "Dan", 6 ); // error
+       r1.checkIn( 101, "Dan", 6 ); // error
+       r1.checkIn( 102, "Dan", 2 ); // error
+       hotel.printSummary();
+       
+       r1.addNewRoom( 103, 1000.00 ); // error
+       r1.addNewRoom( 104, 3500.00 );
+       r1.checkIn( 104, "Tom", 3);
+       
+       r2.addNewRoom( 105, 4000.00 );
+       r2.checkIn( 105, "Jim", 5);
+       
+       r2.checkOut( 101, 8, 0.50 );
+       r3.checkOut( 103, 8, 1.00 );
+       r2.checkOut( 103, 10, 1.00 ); // error
+
+       System.out.println( "---" );
+       System.out.printf( "Total Sales   : %8.2f\n", hotel.getTotalCash() );
+       System.out.printf( "Receptionist 1: %8.2f\n", r1.getCash() );
+       System.out.printf( "Receptionist 2: %8.2f\n", r2.getCash() );
+       System.out.printf( "Receptionist 3: %8.2f\n", r3.getCash() );
+       hotel.printSummary();
+   }
+}
+
+
+public class Receptionist
+{
+    private int rm;
+    private double rate;
+    private String name;
+    private int dayIn;
+    private int dayOut;
+    private double extraRate;
+    private double totalCash;
+    public Receptionist (Hotel h)
+    {
+        h = h;
+    }
+    
+    public void addNewRoom(int roomNumber, double dailyRate)
+    {
+        rm = roomNumber;
+        rate = dailyRate;
+    }
+    
+    public void changeRoomRate(int roomNumber, double dailyRate)
+    {
+        rm = roomNumber;
+        rate = dailyRate;
+    }
+    
+    public void checkIn(int roomNumber, String occupantName, int day)
+    {
+        rm = roomNumber;
+        name = occupantName;
+        dayIn = day;
+    }
+    
+    public double checkOut(int roomNumber, int day, double extraCharges)
+    {
+        rm = roomNumber;
+        dayOut = day;
+        extraRate = extraCharges;
+        return day*extraCharges;
+    }
+    
+    public double getCash()
+    {
+        return totalCash;
+    }
+    
+    public String occupant(int roomNumber)
+    {
+        rm = roomNumber;
+        return name;
+    }
+}
+
+
+public class Room
+{
+    private String occupant;
+    private double rate;
+    private int room;
+    public Room (int rmNo, double dRate)
+    {
+        this.rmNo = rmNo;
+        this.dRate = dRate;
+    }
+    
+    public void changeRate(double newRate)
+    {
+         rate= newRate;
+    }
+    
+    public String getOccupant()
+    {
+        return occupant;
+    }
+    
+    public double getRate()
+    {
+        return rate;
+    }
+    
+    public void occupy(String name, int dayIn)
+    {
+        occupant = name + dayIn;
+    }
+    
+    public int vacate(int dayCheckedOut)
+    {
+        room = dayCheckedOut;
+        return room;
+    }
+}
+
+
+public class Hotel
+{
+    private int rm;
+    private double newRate;
+    private double dRate;
+    private String name;
+    private int day;
+    private int rooms;
+    public Hotel()
+    {
+
+    }
+   
+    public void addRoom(int roomNumber, double rate)
+    {
+        rm = roomNumber;
+        newRate = rate;
+    }
+    
+    public void changeRoomRate(int roomNumber, double newDailyRate)
+    {
+        rm = roomNumber;
+        dRate = newDailyRate;
+    }
+    
+    public void checkIn(int roomNumber, String occupantName, int day)
+    {
+        rm = roomNumber;
+        name = occupantName;
+        this.day = day;
+    }
+    
+    public void checkOut(int roomNumber, int day, double extraCharges)
+    {
+        
+    }
+    
+    public Room findRoom(int roomNumber)
+    {
+      for (int i = 0; i < rooms.size; i++) {
+             Room room = (Room) rooms.get(i);
+             if (roomNumber == room.getRoomNumber()) {
+                 return room;
+             }
+         }
+         return null;
+     }
+    
+    public String getOccupant(int roomNumber)
+    {
+        int rm = 0;
+        String n = "Not Occupied";
+        if (room ==1)
+        {
+            return n;
+        }
+        return name;
+    }
+    
+    public double getTotalCash()
+    {
+        cash = newRate;
+        return cash;
+    }
+    
+    public void printSummary()
+    {
+        String n1 = "Not Occupied";
+        if (room ==1)
+        {
+            System.out.println(n1);
+        }
+    }
+}
+
+
